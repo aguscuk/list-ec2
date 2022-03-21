@@ -1,1 +1,0 @@
-'PrivateIpAddress','PublicIpAddress','Platform','InstanceId','VpcId','InstanceType','PublicDnsName','Hypervisor','LaunchTime','KernelId','Platform','Architecture','VirtualizationType','InstanceLifecycle','PrivateDnsName','PublicDnsName','ImageId','SubnetId','StateReason','Monitoring','State','Placement','SecurityGroups','unix-time','date-time'
