@@ -1,4 +1,24 @@
 aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.Placement.AvailabilityZone, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value),(.Tags[] | select(.Key  == "environment_name").Value)] | @csv'
 
 
-aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.Placement.AvailabilityZone, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value),(.Tags[] | select(.Key  == "environment_name").Value)] | @csv'
+aws ec2 describe-instances --filters "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.Placement.AvailabilityZone, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value), (.Tags[] | select(.Key  == "DOMAIN").Value), (.Tags[] | select(.Key  == "Service").Value), (.Tags[] | select (.Key == "hostname").Value) ] | @csv'
+
+
+--filters "Name=tag:hostname,Values=bastion"
+
+aws ec2 describe-instances --filters "Name=tag:hostname,Values=bastion" "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.Placement.AvailabilityZone, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value), (.Tags[] | select(.Key  == "DOMAIN").Value), (.Tags[] | select(.Key  == "Service").Value), (.Tags[] | select (.Key == "hostname").Value) ] | @csv'
+
+
+## spesific DOMAIN=prod Service=identity
+aws ec2 describe-instances --filters "Name=tag:DOMAIN,Values=prod" "Name=tag:Service,Values=identity" "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.Placement.AvailabilityZone, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value), (.Tags[] | select(.Key  == "DOMAIN").Value), (.Tags[] | select(.Key  == "Service").Value), (.Tags[] | select (.Key == "hostname").Value), (.Tags[] | select (.Key == "Name").Value) ] | @csv'
+
+
+## all provider=aws
+aws ec2 describe-instances --filters "Name=tag:provider,Values=aws" "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.InstanceId, .Placement.AvailabilityZone, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value), (.Tags[] | select(.Key  == "DOMAIN").Value), (.Tags[] | select(.Key  == "Service").Value), (.Tags[] | select (.Key == "hostname").Value), (.Tags[] | select (.Key == "Name").Value) ] | @csv'
+
+
+## all provider=aws, PrivateIpAddress
+aws ec2 describe-instances --filters "Name=tag:provider,Values=aws" "Name=instance-state-name,Values=running" | jq --raw-output '.Reservations[].Instances[] | [.InstanceId, .Placement.AvailabilityZone, .PrivateIpAddress, .PrivateDnsName, .InstanceType, (.Tags[] | select(.Key  == "Name").Value), (.Tags[] | select(.Key  == "DOMAIN").Value), (.Tags[] | select(.Key  == "Service").Value), (.Tags[] | select (.Key == "hostname").Value), (.Tags[] | select (.Key == "Name").Value) ] | @csv'
+
+
+
